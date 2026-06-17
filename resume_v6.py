@@ -13,7 +13,7 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT, TA_JUSTIFY
 from reportlab.platypus import KeepTogether
 
-OUTPUT = "/Users/note.wachirawit/resume/Wachirawit_Thongkaew_Resume.pdf"
+OUTPUT = "/Users/note.wachirawit/resume/Wachirawit_Thongkaew_Resume_edit.pdf"
 
 # Page setup - tight margins for one page
 doc = SimpleDocTemplate(
@@ -70,10 +70,10 @@ name_s = style(
 )
 subtitle_s = style(
     "subtitle",
-    fontName="Helvetica",
+    fontName="Helvetica-Bold",
     fontSize=FS_SUBTITLE,
     leading=12,
-    textColor=BLUE,
+    textColor=BLACK,
     alignment=TA_CENTER,
     spaceAfter=2,
 )
@@ -273,30 +273,30 @@ story.append(
     )
 )
 
-# Highlights (4 cards)
-story += section_header("Highlights")
-story.append(
-    highlights_row(
-        [
-            (
-                "Test Suite Optimization",
-                "Reduced test suite execution time, increasing overall efficiency.",
-            ),
-            (
-                "Team Mentorship",
-                "Improved QA automation by enhancing function logic efficiency, reducing regression execution time.",
-            ),
-            (
-                "AI Adoption",
-                "Leveraged AI to generate test scripts and test scenarios, accelerating automation coverage.",
-            ),
-            (
-                "Production Investigation",
-                "Collaborated with support teams to investigate production issues, performing RCA to resolve critical defects.",
-            ),
-        ]
-    )
-)
+# # Highlights (4 cards)
+# story += section_header("Highlights")
+# story.append(
+#     highlights_row(
+#         [
+#             (
+#                 "Test Suite Optimization",
+#                 "Reduced test suite execution time, increasing overall efficiency.",
+#             ),
+#             (
+#                 "Team Mentorship",
+#                 "Improved QA automation by enhancing function logic efficiency, reducing regression execution time.",
+#             ),
+#             (
+#                 "AI Adoption",
+#                 "Leveraged AI to generate test scripts and test scenarios, accelerating automation coverage.",
+#             ),
+#             (
+#                 "Production Investigation",
+#                 "Collaborated with support teams to investigate production issues, performing RCA to resolve critical defects.",
+#             ),
+#         ]
+#     )
+# )
 
 # Experience
 story += section_header("Experience")
@@ -306,12 +306,12 @@ story.append(
         "Senior QA Engineer",
         "11/2022 - Present",
         [
-            "Coached and mentored QA team members on best practices for test automation to ensure high-quality standards before production deployment.",
-            "Optimized test suites to reduce execution time and increase coverage for critical features.",
-            "Designed load testing scripts in JMeter to simulate concurrent traffic on RESTful APIs.",
-            "Configured GitLab CI/CD quality gates to block MRs failing Selenium/Playwright E2E paths.",
-            "Implemented cloud testing strategies by automating AWS Lambda triggers and S3 validations.",
-            "Developed Gherkin-based scripts for execution with Playwright/Selenium to validate RESTful API responses.",
+            "Established test automation best practices and coding standards for the QA team, reducing defect escape rate before production deployment.",
+            "Optimized automation test suite by consolidating redundant cases and refining execution logic, reducing overall regression run time by 50%.",
+            "Built JMeter load testing scripts to stress-test RESTful APIs under concurrent traffic, identifying performance bottlenecks before production.",
+            "Enforced zero-defect deployment standards by integrating Selenium/Playwright E2E quality gates into GitLab CI/CD, blocking non-compliant merges automatically.",
+            "Extended test coverage to cloud infrastructure by validating serverless workflows and data integrity checks across critical cloud-dependent processes.",
+            "Implemented Behavior-Driven Development (BDD) using Gherkin and Cucumber to align tests with business requirements and standardize feature documentation.",
         ],
     )
 )
@@ -321,9 +321,8 @@ story.append(
         "Software Quality Engineer",
         "11/2021 - 11/2022",
         [
-            "Tested web applications utilizing Cypress and Playwright; performed load testing with k6.",
+            "Validated end-to-end UI flows for ZipCard, a crypto-backed Visa debit card, using Cypress and Playwright to ensure payment accuracy and transaction reliability.",
             "Collaborated with international teams to perform Root Cause Analysis (RCA) on production issues.",
-            "Translated user-reported bugs into technical tickets for the engineering team.",
         ],
     )
 )
@@ -333,8 +332,8 @@ story.append(
         "QA Automation Engineer",
         "07/2020 - 10/2021",
         [
-            "Validated cross-platform mobile apps (Flutter) for iOS/Android and web apps with Cypress.",
-            "Performed UI/UX testing against Figma prototypes and conducted load testing with k6.",
+            "Led end-to-end QA for Com7's BananaIT (BNN) eCommerce platform migration from Magento to a custom-built solution across web and mobile (iOS/Android) using Cypress.",
+            "Validated UI/UX implementation against Figma prototypes and stress-tested the BNN platform under high-traffic retail conditions using k6.",
         ],
     )
 )
@@ -344,8 +343,9 @@ story.append(
         "Quality Assurance Engineer",
         "10/2019 - 06/2020",
         [
-            "Designed test cases in Agile environments and coordinated with Product Owners on priorities.",
-            "Conducted automated UI testing for web applications using Cypress.",
+            "Designed and prioritized test cases in Agile sprints for WeFresh, a grocery delivery platform integrating 7-Eleven, CP Freshmart, and Tesco Lotus Express into a single app.",
+            "Built UI test coverage with Cypress to validate cart, checkout, and partner store integrations across the WeFresh platform.",
+            "Investigated production issues on WeFresh, collaborating with support teams to perform Root Cause Analysis (RCA) and resolve live customer-impacting defects.",
         ],
     )
 )
@@ -355,8 +355,8 @@ story.append(
         "Associate Software Test Engineer Automation",
         "03/2019 - 11/2019",
         [
-            "Tested Android apps with Appium and developed Selenium regression scripts from manual cases.",
-            "Executed and debugged automation scripts to ensure stability and accuracy.",
+            "Built mobile test coverage for myAIS (AIS's all-in-one customer app) using Appium on Android, converting over 100 manual cases into a reusable regression suite.",
+            "Maintained and debugged Selenium and Appium scripts across mobile and web to ensure stability of core myAIS features through each release cycle.",
         ],
     )
 )
