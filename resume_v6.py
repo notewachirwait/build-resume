@@ -1,4 +1,5 @@
 from reportlab.lib.pagesizes import A4
+from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.lib import colors
 from reportlab.lib.units import mm
 from reportlab.platypus import (
@@ -39,9 +40,9 @@ TICK = colors.HexColor("#2E86C1")
 
 FS_NAME = 18
 FS_SUBTITLE = 8
-FS_CONTACT = 7.5
+FS_CONTACT = 8
 FS_SECTION = 8
-FS_BODY = 7
+FS_BODY = 9
 FS_BULLET = 8.5
 FS_HIGHLIGHT = 7.5
 
@@ -96,9 +97,8 @@ section_s = style(
     spaceBefore=4,
 )
 body_s = style("body", fontSize=FS_BODY, leading=9.5, alignment=TA_JUSTIFY)
-bullet_s = style(
-    "bullet", fontSize=FS_BULLET, leading=9, leftIndent=8, firstLineIndent=-6
-)
+bullet_dot_s = style("bullet_dot", fontSize=8.5, leading=11.5, textColor=BLACK)
+bullet_s = style("bullet", fontSize=8.5, leading=11.5, alignment=TA_LEFT)
 date_s = style(
     "date", fontSize=FS_BULLET, textColor=LGRAY, alignment=TA_RIGHT, leading=11
 )
@@ -111,6 +111,14 @@ jobtitle_s = style(
 )
 employer_s = style(
     "employer", fontName="Helvetica-Bold", fontSize=9, textColor=BLUE, leading=12
+)
+expheader_s = style(
+    "expheader",
+    fontName="Helvetica-Bold",
+    fontSize=FS_BULLET,
+    textColor=BLACK,
+    leading=12,
+    spaceAfter=1,
 )
 highlight_label_s = style(
     "hl_label",
@@ -156,8 +164,25 @@ def section_header(text):
     ]
 
 
+def make_bullet(text):
+    DOT_W = 10
+    BODY_W = CW_MAIN + CW_DATE - DOT_W
+    t = Table(
+        [[Paragraph("•", bullet_dot_s), Paragraph(text, bullet_s)]],
+        colWidths=[DOT_W, BODY_W],
+    )
+    t.setStyle(TableStyle([
+        ("VALIGN", (0, 0), (-1, -1), "TOP"),
+        ("LEFTPADDING", (0, 0), (-1, -1), 0),
+        ("RIGHTPADDING", (0, 0), (-1, -1), 0),
+        ("TOPPADDING", (0, 0), (-1, -1), 0),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 0),
+    ]))
+    return t
+
+
 def bullet(text):
-    return Paragraph(f"• {text}", bullet_s)
+    return make_bullet(text)
 
 
 CW_DATE = 35 * mm
@@ -165,11 +190,17 @@ CW_MAIN = W - 12 * mm - 12 * mm - CW_DATE - 2 * mm
 
 
 def exp_block(employer, title, date, bullets):
-    date_col = [Paragraph(date, date_s)]
-    main_col = [Paragraph(employer, employer_s), Paragraph(title, jobtitle_s)]
+    header_text = (
+        f'<font color="#2E86C1"><b>{employer}</b></font>'
+        f'<font color="#888888">  |  </font>'
+        f'{title}'
+        f'<font color="#888888">  |  </font>'
+        f'<font color="#888888">{date}</font>'
+    )
+    items = [Paragraph(header_text, expheader_s)]
     for b in bullets:
-        main_col.append(Paragraph(f"• {b}", bullet_s))
-    t = Table([[main_col, date_col]], colWidths=[CW_MAIN, CW_DATE])
+        items.append(make_bullet(b))
+    t = Table([[items]], colWidths=[CW_MAIN + CW_DATE])
     t.setStyle(
         TableStyle(
             [
@@ -177,7 +208,7 @@ def exp_block(employer, title, date, bullets):
                 ("LEFTPADDING", (0, 0), (-1, -1), 0),
                 ("RIGHTPADDING", (0, 0), (-1, -1), 0),
                 ("TOPPADDING", (0, 0), (-1, -1), 0),
-                ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
             ]
         )
     )
