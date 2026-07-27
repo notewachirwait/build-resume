@@ -99,7 +99,7 @@ license_val_s = style(
     fontSize=FS_BULLET,
     textColor=BLACK,
     leading=10,
-    fontName="Helvetica-Oblique",
+    fontName="Helvetica",
 )
 lang_key_s = style(
     "lang_key",
@@ -144,16 +144,21 @@ skill_key_s = style(
 )
 skill_val_s = style("skill_val", fontSize=FS_BULLET, textColor=BLACK, leading=10)
 
-# Bullet styles — use firstLineIndent trick for clean hanging indent
-BULLET_INDENT = 10  # points
-bullet_s = style(
-    "bullet",
+# Bullet text style — used inside the text column of the Table bullet
+bullet_text_s = style(
+    "bullet_text",
     fontSize=FS_BULLET,
     leading=11,
-    leftIndent=BULLET_INDENT,
-    firstLineIndent=-BULLET_INDENT,
     alignment=TA_LEFT,
 )
+bullet_dot_s = style(
+    "bullet_dot",
+    fontSize=FS_BULLET,
+    leading=11,
+    alignment=TA_CENTER,
+)
+
+BULLET_DOT_W = 10  # points — width of the "•" column
 
 interest_title_s = style(
     "interest_title",
@@ -165,7 +170,7 @@ interest_title_s = style(
 interest_body_s = style(
     "interest_body",
     fontSize=FS_BULLET,
-    textColor=GRAY,
+    textColor=BLACK,
     leading=11,
     alignment=TA_LEFT,
 )
@@ -180,9 +185,27 @@ COL_GAP = 5 * mm
 
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
-def make_bullet(text):
-    """Hanging-indent bullet using Paragraph — no nested Table needed."""
-    return Paragraph(f"• {text}", bullet_s)
+def make_bullet(text, col_width=None):
+    """Two-column Table bullet: fixed dot column + text column.
+    Wrapped lines are guaranteed to align under the text start."""
+    w = col_width if col_width is not None else LEFT_W
+    text_w = w - BULLET_DOT_W
+    t = Table(
+        [[Paragraph("•", bullet_dot_s), Paragraph(text, bullet_text_s)]],
+        colWidths=[BULLET_DOT_W, text_w],
+    )
+    t.setStyle(
+        TableStyle(
+            [
+                ("VALIGN", (0, 0), (-1, -1), "TOP"),
+                ("LEFTPADDING", (0, 0), (-1, -1), 0),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 0),
+                ("TOPPADDING", (0, 0), (-1, -1), 0),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 0),
+            ]
+        )
+    )
+    return t
 
 
 def col_section_header(text, width):
@@ -221,18 +244,17 @@ def build_left_column():
     items += col_section_header("SUMMARY", L)
     items.append(
         Paragraph(
-            "Experienced architect possessing three years of proficiency in conceptual design, "
-            "detailed drafting, and construction site coordination. Demonstrates strong "
-            "communication skills collaborating with contractors.",
+            "Architect with over three years of experience delivering restaurant, café, and residential projects."
+            "Experienced in design development, construction documentation, consultant coordination, and site supervision from concept design through construction.",
             body_s,
         )
     )
-    items.append(Spacer(1, 10))
+    items.append(Spacer(1, 17))
 
     # LICENSE
     items += col_section_header("LICENSE", L)
     items.append(Paragraph("Associate Architect License", license_val_s))
-    items.append(Spacer(1, 10))
+    items.append(Spacer(1, 17))
 
     # EDUCATION
     items += col_section_header("EDUCATION", L)
@@ -253,7 +275,7 @@ def build_left_column():
             [L * 0.68, L * 0.32],
         )
     )
-    items.append(Spacer(1, 10))
+    items.append(Spacer(1, 17))
 
     # EXPERIENCE
     items += col_section_header("EXPERIENCE", L)
@@ -275,26 +297,25 @@ def build_left_column():
             [L * 0.55, L * 0.45],
         )
     )
-    items.append(Spacer(1, 2))
+    items.append(Spacer(1, 5))
 
     bullets = [
-        "<b>Design Award:</b> Led the design of Curvy Dining (2025), a 250 sq.m. freeform restaurant that received the Room SELECT Awards.",
-        "<b>Project Leadership:</b> Overseeing the construction of Ministry Forest, a 1,000 sq.m. tropical garden-centered restaurant complex.",
-        "<b>Boutique Renovation:</b> Managed the 30-room The Tan Hotel renovation, utilizing perforated aluminum facades to enhance privacy and modern identity.",
-        "<b>Material Innovation:</b> Developed seamless, organic interiors for Craft Coffee Roaster and Nose Tea using CNC-cut foam panels and integrated fabric lighting.",
-        "<b>Master Planning:</b> Designed a 24-unit Pool Villa in Khao Yai, coordinating master planning with health-focused communal facilities.",
-        "<b>Technical Expertise:</b> Delivered high-fidelity 3D visualizations, architectural documentation, and on-site coordination.",
+        "Developed architectural drawings from concept design through construction documentation.",
+        "Prepared design development, submission, and construction drawing packages.",
+        "Coordinated with clients, consultants, and contractors throughout the design and construction process.",
+        "Conducted site inspections and monitored construction progress to ensure compliance with design intent.",
+        "Delivered technical documentation, 3D visualizations, and presentation materials while managing multiple projects.",
     ]
     for b in bullets:
         items.append(make_bullet(b))
 
-    items.append(Spacer(1, 5))
+    items.append(Spacer(1, 8))
 
     # ── Second experience ──────────────────────────────────────────────────────
     items.append(
         row_table(
             [
-                Paragraph("Junior Architect", exp_title_s),
+                Paragraph("Architect", exp_title_s),
             ],
             [L * 0.55, L * 0.45],
         )
@@ -303,27 +324,27 @@ def build_left_column():
     items.append(
         row_table(
             [
-                Paragraph("ONION CO., LTD.", exp_company_s),
-                Paragraph("06/2022 - 08/2022", exp_date_s),
+                Paragraph("makeAscene", exp_company_s),
+                Paragraph("03/2026 - Present", exp_date_s),
             ],
             [L * 0.55, L * 0.45],
         )
     )
 
-    items.append(Spacer(1, 2))
+    items.append(Spacer(1, 5))
 
     bullets2 = [
-        "<b>Design Development:</b> Assisted senior architects in developing schematic and design development drawings for residential and mixed-use projects.",
-        "<b>3D Visualization:</b> Produced presentation-quality renderings using Rhino and Enscape to support client pitches and design approvals.",
-        "<b>Site Coordination:</b> Attended site visits and coordinated with contractors to ensure construction aligned with architectural intent.",
+        "Developed architectural drawings from Design Development through Submission and Tender stages.",
+        "Coordinated with Interior, Structural, MEP, and owner’s teams to ensure seamless project delivery.",
+        "Produced 3D models, presentation materials, and technical documentation.",
     ]
     for b in bullets2:
         items.append(make_bullet(b))
 
-    items.append(Spacer(1, 10))
+    items.append(Spacer(1, 17))
 
     # TOOLS
-    items += col_section_header("TOOLS", L)
+    items += col_section_header("SOFTWARES", L)
     tools = [
         ("3D Model", "Rhino, Sketchup"),
         ("Render", "Enscape, D5Render"),
@@ -343,7 +364,7 @@ def build_left_column():
                 )
             )
 
-    items.append(Spacer(1, 10))
+    items.append(Spacer(1, 17))
 
     # LANGUAGES
     items += col_section_header("LANGUAGES", L)
@@ -380,24 +401,15 @@ def build_right_column():
     R = RIGHT_W
     items = []
 
-    items += col_section_header("INTERESTS", R)
+    items += col_section_header("BEYOND WORK", R)
 
     interest_items = [
         (
-            "Residential & Public Architecture",
-            "Highly interested in designing private residences, housing developments, and large-scale public buildings.",
-        ),
-        (
-            "Scale & Complexity",
-            "Seeking to apply architectural expertise to larger, more complex projects that challenge design and technical boundaries.",
+            "I enjoy visiting construction sites, observing how designs are translated into reality, and learning through real-world project execution. Outside work, I enjoy traveling and exploring architecture, local culture, and new environments.",
         ),
     ]
 
-    for i, (title, body) in enumerate(interest_items):
-        items.append(Paragraph(title, interest_title_s))
-        items.append(Paragraph(body, interest_body_s))
-        if i < len(interest_items) - 1:
-            items.append(Spacer(1, 5))
+    items.append(Paragraph(interest_items[0][0], interest_body_s))
 
     return items
 
@@ -455,7 +467,7 @@ story = []
 
 story.append(Paragraph("TANAPORN KARUHAWANIT", name_s))
 story.append(Paragraph("Architect", subtitle_s))
-story.append(Paragraph("Email: tanaprnnn@gmail.com", contact_s))
+story.append(Paragraph("Email: tanaprnnn@gmail.com.  Phone: 0992623598", contact_s))
 story.append(
     HRFlowable(
         width="100%",
